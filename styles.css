@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: "Inter";
@@ -50,9 +49,9 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* Centers tooltip on the map */
   text-align: center;
-  z-index: 5;
+  z-index: 10;
 }
 
 .center-tooltip button {
@@ -77,20 +76,24 @@ body {
 }
 
 .available-cities {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
-  margin: 0;
+  margin: 5px 0 0 0;
+  display: none;
   max-height: 200px;
   overflow-y: auto;
   background-color: white;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  display: none;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  font-size: 12px;
 }
 
 .available-cities li {
-  padding: 10px;
   border-bottom: 1px solid #ddd;
+  height: 20px;
+  justify-content: center;
 }
 
 .available-cities li:last-child {
