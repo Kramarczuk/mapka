@@ -1,14 +1,12 @@
-// script.js
-
 document.addEventListener("DOMContentLoaded", function () {
   const tooltipToggle = document.getElementById("tooltip-toggle");
   const availableCities = document.getElementById("available-cities");
   const apiUrl =
     "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
 
-  // Funkcja aktualizująca tooltip z listą miast
+  // Aktualizacja centralnego tooltipa
   function updateTooltip(events) {
-    availableCities.innerHTML = ""; // Czyszczenie listy
+    availableCities.innerHTML = ""; 
 
     let hasAvailableCities = false;
 
@@ -30,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Funkcja do pobierania danych z API
+  // API
 
   async function fetchEventData() {
     try {
@@ -88,6 +86,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Inicjalizacja
   fetchEventData();
 });
