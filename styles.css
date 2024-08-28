@@ -93,7 +93,6 @@ body {
 .available-cities li {
   border-bottom: 1px solid #ddd;
   height: 20px;
-  justify-content: center;
 }
 
 .available-cities li:last-child {
