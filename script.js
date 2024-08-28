@@ -1,40 +1,40 @@
+// script.js
+
 document.addEventListener("DOMContentLoaded", function () {
   const tooltipToggle = document.getElementById("tooltip-toggle");
   const availableCities = document.getElementById("available-cities");
   const apiUrl =
     "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
 
-  // Aktualizacja centralnego tooltipa
+  // Funkcja aktualizująca centralny tooltip
+  function updateTooltip(events) {
+    availableCities.innerHTML = ""; // Czyszczenie listy
 
-    function updateTooltip(events) {
-        availableCities.innerHTML = ''; 
+    events.forEach((event) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="#">${event.name}</a>`;
+      availableCities.appendChild(li);
 
-        events.forEach(event => {
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="#">${event.name}</a>`;
-            availableCities.appendChild(li);
+      // Dodanie linku
+      li.querySelector("a").href = `#`;
+    });
 
-            // Dodanie eventu do linku - do dodania
-            li.querySelector('a').href = `#`; 
-        });
-
-        if (events.length === 0) {
-            const li = document.createElement('li');
-            li.textContent = 'Brak dostępnych miast';
-            availableCities.appendChild(li);
-        }
+    if (events.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "Brak dostępnych miast";
+      availableCities.appendChild(li);
     }
+  }
 
-
-  // API
+  //API
 
   async function fetchEventData() {
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
-      console.log(data); // Logowanie danych
+      console.log(data);
 
-      const events = data.tickets; // Używamy tickets bezpośrednio
+      const events = data.tickets;
 
       events.forEach((event) => {
         const cityPoint = document.querySelector(
@@ -64,13 +64,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
 
-      updateTooltip(events); // Aktualizacja centralnego tooltipa
+      updateTooltip(events);
     } catch (error) {
       console.error("Błąd podczas pobierania danych z API:", error);
     }
   }
 
-  // Logika przycisku do pokazania/ukrycia listy
   tooltipToggle.addEventListener("click", () => {
     if (
       availableCities.style.display === "none" ||
