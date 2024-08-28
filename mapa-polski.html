@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interaktywna Mapa Eventów</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+</head>
+
+<body>
+  <div class="map-container">
+    <img src="Mapka 1.png" alt="Mapa Polski" class="map-image">
+
+    <!-- Punkty na mapie -->
+    <div class="map-point" id="warsaw-point" data-city="Warszawa" data-event-id="f1bwnbvc2s"
+      style="top: 48%; left: 66.5%;"></div>
+    <div class="map-point" id="jasin-point" data-city="Jasin" data-event-id="v1b0gwualw" style="top: 45.5%; left: 33%;">
+    </div>
+    <!-- Dodaj kolejne punkty z odpowiednimi ID i pozycjami -->
+
+    <!-- Centralny tooltip -->
+    <div class="center-tooltip">
+      <button id="tooltip-toggle">Wybierz miasto <span class="arrow-tooltip-button">&#8594;</span></button>
+      <ul id="available-cities" class="available-cities"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

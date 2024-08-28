@@ -1,0 +1,99 @@
+/* styles.css */
+
+body {
+  margin: 0;
+  font-family: "Inter";
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.map-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-point {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  background-color: gray;
+  border-radius: 4%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.map-point.available {
+  background-color: rgb(255, 103, 31);
+}
+
+.map-point-tooltip {
+  display: none;
+  position: absolute;
+  background-color: rgb(255, 103, 31);
+  color: white;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  z-index: 10;
+  font-family: "Inter";
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.center-tooltip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 5;
+}
+
+.center-tooltip button {
+  padding: 0px 13px 0px 22px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  width: 170px;
+  height: 35px;
+  justify-content: space-between;
+  text-align: left;
+  font-weight: bold;
+  margin: 0;
+  font-family: "Inter";
+  background-color: rgb(255, 103, 31);
+  color: white;
+}
+
+.arrow-tooltip-button {
+  display: inline;
+}
+
+.available-cities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: none;
+}
+
+.available-cities li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.available-cities li:last-child {
+  border-bottom: none;
+}
