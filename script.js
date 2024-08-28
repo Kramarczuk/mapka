@@ -5,28 +5,26 @@ document.addEventListener("DOMContentLoaded", function () {
     "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
 
   // Aktualizacja centralnego tooltipa
-  function updateTooltip(events) {
-    availableCities.innerHTML = ""; 
 
-    let hasAvailableCities = false;
+    function updateTooltip(events) {
+        availableCities.innerHTML = ''; 
 
-    events.forEach((event) => {
-      if (event.saleStatus === "onGoing") {
-        hasAvailableCities = true;
-        const li = document.createElement("li");
-        li.innerHTML = `${event.name}<br>Bilety: Dostępne<br><a href="${
-          event.ticketUrl || "#"
-        }">Zapisz się</a>`;
-        availableCities.appendChild(li);
-      }
-    });
+        events.forEach(event => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#">${event.name}</a>`;
+            availableCities.appendChild(li);
 
-    if (!hasAvailableCities) {
-      const li = document.createElement("li");
-      li.textContent = "Brak dostępnych biletów";
-      availableCities.appendChild(li);
+            // Dodanie eventu do linku - do dodania
+            li.querySelector('a').href = `#`; 
+        });
+
+        if (events.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Brak dostępnych miast';
+            availableCities.appendChild(li);
+        }
     }
-  }
+
 
   // API
 
