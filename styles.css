@@ -14,6 +14,7 @@ body {
   width: 100%;
   height: auto;
   display: block;
+  z-index: 1;
 }
 
 .map-point {
@@ -24,6 +25,7 @@ body {
   border-radius: 4%;
   cursor: pointer;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .map-point.available {
@@ -43,15 +45,16 @@ body {
   font-family: "Inter";
   font-size: 10px;
   font-weight: 700;
+  z-index: 10;
 }
 
 .center-tooltip {
   position: absolute;
-  top: 50%;
+  top: 43%;
   left: 50%;
-  transform: translate(-50%, -50%); 
+  transform: translate(-50%, 0);
   text-align: center;
-  z-index: 10;
+  z-index: 2;
 }
 
 .center-tooltip button {
@@ -69,10 +72,11 @@ body {
   font-family: "Inter";
   background-color: rgb(255, 103, 31);
   color: white;
+  z-index: 12;
 }
 
 .arrow-tooltip-button {
-  display: inline;
+  text-align: right;
 }
 
 .available-cities {
@@ -92,7 +96,15 @@ body {
 
 .available-cities li {
   border-bottom: 1px solid #ddd;
-  height: 20px;
+  height: 40px;
+  width: 170px;
+  justify-content: center;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 8px;
+  padding-left: 4px;
+  padding-right: 4px;
+  word-wrap: break-word;
 }
 
 .available-cities li:last-child {
