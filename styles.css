@@ -62,21 +62,24 @@ body {
   border: none;
   font-size: 12px;
   cursor: pointer;
-  margin-bottom: 10px;
-  width: 170px;
+  width: 190px;
   height: 35px;
-  justify-content: space-between;
-  text-align: left;
   font-weight: bold;
-  margin: 0;
   font-family: "Inter";
   background-color: rgb(255, 103, 31);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   z-index: 12;
+  position: relative;
+  transition: none;
 }
 
 .arrow-tooltip-button {
-  text-align: right;
+  margin-left: auto;
+  font-size: 14px;
+  padding-left: 5px;
 }
 
 .available-cities {
