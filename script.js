@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   const tooltipToggle = document.getElementById("tooltip-toggle");
   const availableCities = document.getElementById("available-cities");
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (events.length === 0) {
       const li = document.createElement("li");
-      li.textContent = "Brak dostępnych miast";
+      li.textContent = "Brak dostępnych wydarzeń";
       availableCities.appendChild(li);
     }
   }
@@ -40,9 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
           `[data-event-id="${event.id}"]`
         );
         if (cityPoint) {
-          const tooltipText = `${event.name}<br>Bilety: ${
-            event.saleStatus === "onGoing" ? "Dostępne" : "Brak dostępnych"
-          }<br><a href="${event.ticketUrl || "#"}">Zapisz się</a>`;
+          const tooltipText = `<span style="font-weight: bold;">${
+            event.name
+          }</span><br><a href="${
+            event.ticketUrl ||
+            "https://blum-w-trasie-2024.gridaly.com/registration?znu3cx0j6z=1"
+          }">Zarejestruj się</a>`;
 
           if (event.saleStatus === "onGoing") {
             cityPoint.classList.add("available");
