@@ -39,7 +39,7 @@ body {
   color: white;
   padding: 5px 10px 5px 10px;
   width: 120px;
-  transform: translate(0, -61%);
+  transform: translate(-1%, -61%);
   z-index: 10;
   font-family: "Inter";
   font-size: 10px;
