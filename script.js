@@ -14,29 +14,38 @@ document.addEventListener("DOMContentLoaded", function () {
         const linkUrl = cityPoint.getAttribute("data-link");
 
         // Create the tooltip content
-        const tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
+        let tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
 
         if (event.saleStatus === "onGoing") {
           cityPoint.classList.add("available");
 
           // Tooltip for map points
-          const tooltip = document.createElement("div");
-          tooltip.classList.add("map-point-tooltip");
-          tooltip.innerHTML = tooltipText;
-          cityPoint.appendChild(tooltip);
+          const tooltip = cityPoint.querySelector(".map-point-tooltip");
 
-          cityPoint.addEventListener("mouseenter", () => {
-            tooltip.style.display = "block";
-          });
+          if (tooltip) {
+            tooltip.innerHTML = tooltipText;
+          } else {
+            const newTooltip = document.createElement("div");
+            newTooltip.classList.add("map-point-tooltip");
+            newTooltip.innerHTML = tooltipText;
+            cityPoint.appendChild(newTooltip);
 
-          cityPoint.addEventListener("mouseleave", () => {
-            tooltip.style.display = "none";
-          });
+            cityPoint.addEventListener("mouseenter", () => {
+              newTooltip.style.display = "block";
+            });
+
+            cityPoint.addEventListener("mouseleave", () => {
+              newTooltip.style.display = "none";
+            });
+          }
         }
 
         // Add to central list
         const li = document.createElement("li");
         li.innerHTML = `<a href="${linkUrl}">${event.name}</a>`;
+        li.addEventListener("click", () => {
+          window.location.href = linkUrl; // Cały element li klikalny
+        });
         availableCities.appendChild(li);
       }
     });
@@ -58,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const events = data.tickets;
       updateTooltip(events);
+      addSecondEventTooltip(events); // Przekazanie danych do funkcji tooltipów
     } catch (error) {
       console.error("Błąd podczas pobierania danych z API:", error);
     }
@@ -76,6 +86,63 @@ document.addEventListener("DOMContentLoaded", function () {
         'Wybierz miasto <span class="arrow-tooltip-button">&#x2192;</span>';
     }
   });
+
+  document.addEventListener("click", function (event) {
+    const isClickInside =
+      availableCities.contains(event.target) ||
+      tooltipToggle.contains(event.target);
+    if (!isClickInside) {
+      availableCities.style.display = "none";
+      tooltipToggle.innerHTML =
+        'Wybierz miasto <span class="arrow-tooltip-button">&#x2192;</span>';
+    }
+  });
+
+  // Tooltip dla drugiego eventu, teraz z nazwami wydarzeń z API
+  function addSecondEventTooltip(events) {
+    const points = document.querySelectorAll(".map-point");
+
+    points.forEach((point) => {
+      const eventId = point.getAttribute("data-event-id");
+      const eventLink = point.getAttribute("data-link");
+      const secondEventId = point.getAttribute("second-event-id");
+      const secondEventLink = point.getAttribute("second-data-link");
+
+      // Znajdź wydarzenie dla pierwszego eventu
+      const firstEvent = events.find((event) => event.id === eventId);
+      const firstEventName = firstEvent ? firstEvent.name : "Event 1";
+
+      // Znajdź wydarzenie dla drugiego eventu
+      const secondEvent = events.find((event) => event.id === secondEventId);
+      const secondEventName = secondEvent ? secondEvent.name : "Event 2";
+
+      let tooltipContent = `<strong>${firstEventName}</strong><br><a href="${eventLink}" target="_blank">Zarejestruj się</a>`;
+
+      // Jeśli punkt ma drugi event, dodajemy drugi event do tooltipa
+      if (secondEventId && secondEventLink) {
+        tooltipContent += `<br><br><br><strong>${secondEventName}</strong><br><a href="${secondEventLink}" target="_blank">Zarejestruj się</a>`;
+      }
+
+      const tooltip = point.querySelector(".map-point-tooltip");
+
+      if (tooltip) {
+        tooltip.innerHTML = tooltipContent;
+      } else {
+        const newTooltip = document.createElement("div");
+        newTooltip.classList.add("map-point-tooltip");
+        newTooltip.innerHTML = tooltipContent;
+        point.appendChild(newTooltip);
+
+        point.addEventListener("mouseenter", () => {
+          newTooltip.style.display = "block";
+        });
+
+        point.addEventListener("mouseleave", () => {
+          newTooltip.style.display = "none";
+        });
+      }
+    });
+  }
 
   fetchEventData();
 });
