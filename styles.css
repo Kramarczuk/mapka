@@ -90,7 +90,7 @@ body {
   padding: 0;
   margin: 5px 0 0 0;
   display: none;
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
   background-color: white;
   border: 1px solid #ccc;
@@ -102,15 +102,24 @@ body {
 
 .available-cities li {
   border-bottom: 1px solid #ddd;
-  height: 40px;
   width: 170px;
   justify-content: center;
-  text-align: center;
-  padding-top: 10px;
+  text-align: left;
+  padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 4px;
   padding-right: 4px;
   word-wrap: break-word;
+}
+
+.available-cities :hover {
+  background-color: rgb(206, 206, 206);
+  cursor: pointer;
+}
+
+.available-cities a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
 }
 
 .available-cities li:last-child {
