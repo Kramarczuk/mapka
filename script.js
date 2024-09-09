@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.saleStatus === "onGoing") {
           cityPoint.classList.add("available");
 
-          // Tooltip for map points
           const tooltip = cityPoint.querySelector(".map-point-tooltip");
 
           if (tooltip) {
@@ -30,27 +29,45 @@ document.addEventListener("DOMContentLoaded", function () {
             newTooltip.innerHTML = tooltipText;
             cityPoint.appendChild(newTooltip);
 
+            // Variables to handle tooltip hover and timeout
+            let hideTooltipTimeout;
+
             cityPoint.addEventListener("mouseenter", () => {
+              clearTimeout(hideTooltipTimeout); // Prevent immediate hiding
               newTooltip.style.display = "block";
             });
 
+            newTooltip.addEventListener("mouseenter", () => {
+              clearTimeout(hideTooltipTimeout); // Keep tooltip visible when hovering
+            });
+
+            cityPoint.addEventListener("click", () => {
+              window.location.href = linkUrl;
+            });
+
             cityPoint.addEventListener("mouseleave", () => {
-              newTooltip.style.display = "none";
+              hideTooltipTimeout = setTimeout(() => {
+                newTooltip.style.display = "none";
+              }, 300); // Tooltip will hide after 300ms
+            });
+
+            newTooltip.addEventListener("mouseleave", () => {
+              hideTooltipTimeout = setTimeout(() => {
+                newTooltip.style.display = "none";
+              }, 300); // Hide when leaving the tooltip area after a delay
             });
           }
         }
 
-        // Add to central list
         const li = document.createElement("li");
         li.innerHTML = `<a href="${linkUrl}">${event.name}</a>`;
         li.addEventListener("click", () => {
-          window.location.href = linkUrl; // Cały element li klikalny
+          window.location.href = linkUrl;
         });
         availableCities.appendChild(li);
       }
     });
 
-    // If no events are available
     if (events.length === 0) {
       const li = document.createElement("li");
       li.textContent = "Brak dostępnych wydarzeń";
@@ -58,16 +75,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Fetch API data
   async function fetchEventData() {
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
-      console.log(data);
-
       const events = data.tickets;
       updateTooltip(events);
-      addSecondEventTooltip(events); // Przekazanie danych do funkcji tooltipów
+      addSecondEventTooltip(events);
     } catch (error) {
       console.error("Błąd podczas pobierania danych z API:", error);
     }
@@ -98,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Tooltip dla drugiego eventu, teraz z nazwami wydarzeń z API
   function addSecondEventTooltip(events) {
     const points = document.querySelectorAll(".map-point");
 
@@ -108,17 +121,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const secondEventId = point.getAttribute("second-event-id");
       const secondEventLink = point.getAttribute("second-data-link");
 
-      // Znajdź wydarzenie dla pierwszego eventu
       const firstEvent = events.find((event) => event.id === eventId);
       const firstEventName = firstEvent ? firstEvent.name : "Event 1";
 
-      // Znajdź wydarzenie dla drugiego eventu
       const secondEvent = events.find((event) => event.id === secondEventId);
       const secondEventName = secondEvent ? secondEvent.name : "Event 2";
 
       let tooltipContent = `<strong>${firstEventName}</strong><br><a href="${eventLink}" target="_blank">Zarejestruj się</a>`;
 
-      // Jeśli punkt ma drugi event, dodajemy drugi event do tooltipa
       if (secondEventId && secondEventLink) {
         tooltipContent += `<br><br><br><strong>${secondEventName}</strong><br><a href="${secondEventLink}" target="_blank">Zarejestruj się</a>`;
       }
@@ -133,12 +143,31 @@ document.addEventListener("DOMContentLoaded", function () {
         newTooltip.innerHTML = tooltipContent;
         point.appendChild(newTooltip);
 
+        let hideTooltipTimeout;
+
         point.addEventListener("mouseenter", () => {
+          clearTimeout(hideTooltipTimeout);
           newTooltip.style.display = "block";
         });
 
+        newTooltip.addEventListener("mouseenter", () => {
+          clearTimeout(hideTooltipTimeout);
+        });
+
+        point.addEventListener("click", () => {
+          window.location.href = linkUrl;
+        });
+
         point.addEventListener("mouseleave", () => {
-          newTooltip.style.display = "none";
+          hideTooltipTimeout = setTimeout(() => {
+            newTooltip.style.display = "none";
+          }, 300);
+        });
+
+        newTooltip.addEventListener("mouseleave", () => {
+          hideTooltipTimeout = setTimeout(() => {
+            newTooltip.style.display = "none";
+          }, 300);
         });
       }
     });
