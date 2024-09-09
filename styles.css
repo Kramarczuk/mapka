@@ -42,13 +42,14 @@ body {
   transform: translate(-1%, -61%);
   z-index: 10;
   font-family: "Inter";
-  font-size: 10px;
-  font-weight: 700;
-  transition: opacity 1s ease-in-out;
+  font-size: 12px;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .map-point-tooltip a {
   color: white;
+  font-weight: bold;
+  font-weight: 800;
 }
 
 .center-tooltip {
@@ -96,8 +97,12 @@ body {
   border: 1px solid #ccc;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 400px;
   font-size: 12px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .available-cities li {
@@ -110,6 +115,7 @@ body {
   padding-left: 4px;
   padding-right: 4px;
   word-wrap: break-word;
+  width: 400px;
 }
 
 .available-cities :hover {
