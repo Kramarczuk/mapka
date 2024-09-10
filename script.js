@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const apiUrl =
     "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
 
-  // Update tooltip and central list function
   function updateTooltip(events) {
     availableCities.innerHTML = ""; // Clear the list
 
@@ -12,50 +11,59 @@ document.addEventListener("DOMContentLoaded", function () {
       const cityPoint = document.querySelector(`[data-event-id="${event.id}"]`);
       if (cityPoint) {
         const linkUrl = cityPoint.getAttribute("data-link");
+        const secondEventId = cityPoint.getAttribute("second-event-id");
+        const secondEventLink = cityPoint.getAttribute("second-data-link");
 
-        // Create the tooltip content
         let tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
+
+        if (secondEventId && secondEventLink) {
+          const secondEvent = events.find((e) => e.id === secondEventId);
+          const secondEventName = secondEvent ? secondEvent.name : "Event 2";
+          tooltipText += `<br><br><strong style= "font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+        }
 
         if (event.saleStatus === "onGoing") {
           cityPoint.classList.add("available");
 
-          const tooltip = cityPoint.querySelector(".map-point-tooltip");
+          let tooltip = cityPoint.querySelector(".map-point-tooltip");
 
-          if (tooltip) {
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.classList.add("map-point-tooltip");
             tooltip.innerHTML = tooltipText;
-          } else {
-            const newTooltip = document.createElement("div");
-            newTooltip.classList.add("map-point-tooltip");
-            newTooltip.innerHTML = tooltipText;
-            cityPoint.appendChild(newTooltip);
-
-            // Variables to handle tooltip hover and timeout
-            let hideTooltipTimeout;
+            cityPoint.appendChild(tooltip);
 
             cityPoint.addEventListener("mouseenter", () => {
-              clearTimeout(hideTooltipTimeout); // Prevent immediate hiding
-              newTooltip.style.display = "block";
-            });
-
-            newTooltip.addEventListener("mouseenter", () => {
-              clearTimeout(hideTooltipTimeout); // Keep tooltip visible when hovering
-            });
-
-            cityPoint.addEventListener("click", () => {
-              window.location.href = linkUrl;
+              tooltip.style.display = "block";
             });
 
             cityPoint.addEventListener("mouseleave", () => {
-              hideTooltipTimeout = setTimeout(() => {
-                newTooltip.style.display = "none";
-              }, 300); // Tooltip will hide after 300ms
+              setTimeout(() => {
+                if (
+                  !tooltip.matches(":hover") &&
+                  !cityPoint.matches(":hover")
+                ) {
+                  tooltip.style.display = "none";
+                }
+              }, 300);
             });
 
-            newTooltip.addEventListener("mouseleave", () => {
-              hideTooltipTimeout = setTimeout(() => {
-                newTooltip.style.display = "none";
-              }, 300); // Hide when leaving the tooltip area after a delay
+            tooltip.addEventListener("mouseenter", () => {
+              tooltip.style.display = "block";
             });
+
+            tooltip.addEventListener("mouseleave", () => {
+              setTimeout(() => {
+                if (
+                  !tooltip.matches(":hover") &&
+                  !cityPoint.matches(":hover")
+                ) {
+                  tooltip.style.display = "none";
+                }
+              }, 300);
+            });
+          } else {
+            tooltip.innerHTML = tooltipText;
           }
         }
 
@@ -65,6 +73,18 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.href = linkUrl;
         });
         availableCities.appendChild(li);
+
+        if (secondEventId && secondEventLink) {
+          const secondEvent = events.find((e) => e.id === secondEventId);
+          if (secondEvent) {
+            const secondLi = document.createElement("li");
+            secondLi.innerHTML = `<a href="${secondEventLink}">${secondEvent.name}</a>`;
+            secondLi.addEventListener("click", () => {
+              window.location.href = secondEventLink;
+            });
+            availableCities.appendChild(secondLi);
+          }
+        }
       }
     });
 
@@ -79,9 +99,9 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
+
       const events = data.tickets;
       updateTooltip(events);
-      addSecondEventTooltip(events);
     } catch (error) {
       console.error("Błąd podczas pobierania danych z API:", error);
     }
@@ -112,66 +132,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  function addSecondEventTooltip(events) {
-    const points = document.querySelectorAll(".map-point");
+  document.querySelectorAll(".map-point").forEach((point) => {
+    const eventId = point.getAttribute("data-event-id");
+    const eventLink = point.getAttribute("data-link");
 
-    points.forEach((point) => {
-      const eventId = point.getAttribute("data-event-id");
-      const eventLink = point.getAttribute("data-link");
-      const secondEventId = point.getAttribute("second-event-id");
-      const secondEventLink = point.getAttribute("second-data-link");
+    const tooltip = document.createElement("div");
+    tooltip.classList.add("map-point-tooltip");
+    tooltip.innerHTML = `<strong>Event Name</strong><br><a href="${eventLink}" target="_blank">Zapisz się</a>`;
 
-      const firstEvent = events.find((event) => event.id === eventId);
-      const firstEventName = firstEvent ? firstEvent.name : "Event 1";
+    point.appendChild(tooltip);
 
-      const secondEvent = events.find((event) => event.id === secondEventId);
-      const secondEventName = secondEvent ? secondEvent.name : "Event 2";
-
-      let tooltipContent = `<strong>${firstEventName}</strong><br><a href="${eventLink}" target="_blank">Zarejestruj się</a>`;
-
-      if (secondEventId && secondEventLink) {
-        tooltipContent += `<br><br><br><strong>${secondEventName}</strong><br><a href="${secondEventLink}" target="_blank">Zarejestruj się</a>`;
-      }
-
-      const tooltip = point.querySelector(".map-point-tooltip");
-
-      if (tooltip) {
-        tooltip.innerHTML = tooltipContent;
-      } else {
-        const newTooltip = document.createElement("div");
-        newTooltip.classList.add("map-point-tooltip");
-        newTooltip.innerHTML = tooltipContent;
-        point.appendChild(newTooltip);
-
-        let hideTooltipTimeout;
-
-        point.addEventListener("mouseenter", () => {
-          clearTimeout(hideTooltipTimeout);
-          newTooltip.style.display = "block";
-        });
-
-        newTooltip.addEventListener("mouseenter", () => {
-          clearTimeout(hideTooltipTimeout);
-        });
-
-        point.addEventListener("click", () => {
-          window.location.href = linkUrl;
-        });
-
-        point.addEventListener("mouseleave", () => {
-          hideTooltipTimeout = setTimeout(() => {
-            newTooltip.style.display = "none";
-          }, 300);
-        });
-
-        newTooltip.addEventListener("mouseleave", () => {
-          hideTooltipTimeout = setTimeout(() => {
-            newTooltip.style.display = "none";
-          }, 300);
-        });
-      }
+    point.addEventListener("mouseenter", () => {
+      tooltip.style.display = "block";
     });
-  }
+
+    tooltip.addEventListener("mouseenter", () => {
+      tooltip.style.display = "block";
+    });
+
+    point.addEventListener("mouseleave", () => {
+      setTimeout(() => {
+        if (!tooltip.matches(":hover") && !point.matches(":hover")) {
+          tooltip.style.display = "none";
+        }
+      }, 300); 
+    });
+
+    tooltip.addEventListener("mouseleave", () => {
+      setTimeout(() => {
+        if (!tooltip.matches(":hover") && !point.matches(":hover")) {
+          tooltip.style.display = "none";
+        }
+      }, 300);
+    });
+  });
 
   fetchEventData();
 });
