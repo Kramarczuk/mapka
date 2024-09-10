@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Inter";
+  font-family: "Inter", sans-serif;
 }
 
 .map-container {
@@ -8,6 +8,7 @@ body {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
+  font-weight: 400;
 }
 
 .map-image {
@@ -22,7 +23,6 @@ body {
   width: 17px;
   height: 17px;
   background-color: gray;
-  border-radius: 4%;
   cursor: pointer;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -41,15 +41,32 @@ body {
   width: 120px;
   transform: translate(-1%, -61%);
   z-index: 10;
-  font-family: "Inter";
   font-size: 12px;
-  font-weight: 400;
   transition: opacity 0.3s ease-in-out;
+  pointer-events: auto;
+}
+
+.tooltip-wrapper {
+  position: absolute;
+  top: -10px; /* Adjust the position based on your tooltip's layout */
+  left: -10px;
+  padding: 10px; /* Extend the hoverable area */
 }
 
 .map-point-tooltip a {
   color: white;
-  font-weight: 700;
+  font-weight: bold;
+}
+
+.map-point-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  z-index: -1; /* Invisible safe zone */
+  pointer-events: none;
 }
 
 .center-tooltip {
