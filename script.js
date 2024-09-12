@@ -6,24 +6,25 @@ else document.addEventListener("DOMContentLoaded", initBlumMap);
 
 function updateTooltip(events) {
   const availableCities = document.getElementById("available-cities");
-  availableCities.innerHTML = ""; // Clear the list
+  availableCities.innerHTML = "";
 
   events.forEach((event) => {
     const cityPoint = document.querySelector(`[data-event-id="${event.id}"]`);
-    if (cityPoint) {
-      const linkUrl = cityPoint.getAttribute("data-link");
-      const secondEventId = cityPoint.getAttribute("second-event-id");
-      const secondEventLink = cityPoint.getAttribute("second-data-link");
 
-      let tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
+    if (event.saleStatus === "onGoing") {
+      if (cityPoint) {
+        const linkUrl = cityPoint.getAttribute("data-link");
+        const secondEventId = cityPoint.getAttribute("second-event-id");
+        const secondEventLink = cityPoint.getAttribute("second-data-link");
 
-      if (secondEventId && secondEventLink) {
-        const secondEvent = events.find((e) => e.id === secondEventId);
-        const secondEventName = secondEvent ? secondEvent.name : "Event 2";
-        tooltipText += `<br><br><strong style= "font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
-      }
+        let tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
 
-      if (event.saleStatus === "onGoing") {
+        if (secondEventId && secondEventLink) {
+          const secondEvent = events.find((e) => e.id === secondEventId);
+          const secondEventName = secondEvent ? secondEvent.name : "Event 2";
+          tooltipText += `<br><br><strong style= "font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+        }
+
         cityPoint.classList.add("available");
 
         let tooltip = cityPoint.querySelector(".map-point-tooltip");
@@ -60,24 +61,36 @@ function updateTooltip(events) {
         } else {
           tooltip.innerHTML = tooltipText;
         }
+
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${linkUrl}">${event.name}</a>`;
+        li.addEventListener("click", () => {
+          window.location.href = linkUrl;
+        });
+        availableCities.appendChild(li);
+
+        if (secondEventId && secondEventLink) {
+          const secondEvent = events.find((e) => e.id === secondEventId);
+          if (secondEvent) {
+            const secondLi = document.createElement("li");
+            secondLi.innerHTML = `<a href="${secondEventLink}">${secondEvent.name}</a>`;
+            secondLi.addEventListener("click", () => {
+              window.location.href = secondEventLink;
+            });
+            availableCities.appendChild(secondLi);
+          }
+        }
       }
+    } else {
+      // Ensure map point and list item are disabled if there are no tickets
+      if (cityPoint) {
+        cityPoint.classList.remove("available");
 
-      const li = document.createElement("li");
-      li.innerHTML = `<a href="${linkUrl}">${event.name}</a>`;
-      li.addEventListener("click", () => {
-        window.location.href = linkUrl;
-      });
-      availableCities.appendChild(li);
+        cityPoint.style.pointerEvents = "none";
 
-      if (secondEventId && secondEventLink) {
-        const secondEvent = events.find((e) => e.id === secondEventId);
-        if (secondEvent) {
-          const secondLi = document.createElement("li");
-          secondLi.innerHTML = `<a href="${secondEventLink}">${secondEvent.name}</a>`;
-          secondLi.addEventListener("click", () => {
-            window.location.href = secondEventLink;
-          });
-          availableCities.appendChild(secondLi);
+        const tooltip = cityPoint.querySelector(".map-point-tooltip");
+        if (tooltip) {
+          tooltip.remove();
         }
       }
     }
@@ -135,6 +148,7 @@ function initBlumMap() {
     const eventId = point.getAttribute("data-event-id");
     const eventLink = point.getAttribute("data-link");
 
+    // Add only default behavior here, updateTooltip() will handle saleStatus logic
     const tooltip = document.createElement("div");
     tooltip.classList.add("map-point-tooltip");
     tooltip.innerHTML = `<strong>Event Name</strong><br><a href="${eventLink}" target="_blank">Zapisz się</a>`;
