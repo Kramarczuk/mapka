@@ -32,20 +32,22 @@
   position: absolute;
   background-color: rgb(255, 103, 31);
   color: white;
-  padding: 5px 10px 5px 10px;
+  padding: 5px 10px;
   width: 120px;
   transform: translate(-1%, -61%);
   z-index: 10;
   font-size: 12px;
   transition: opacity 0.3s ease-in-out;
   pointer-events: auto;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .tooltip-wrapper {
   position: absolute;
-  top: -10px; /* Adjust the position based on your tooltip's layout */
+  top: -10px;
   left: -10px;
-  padding: 10px; /* Extend the hoverable area */
+  padding: 10px;
 }
 
 .map-point-tooltip a {
@@ -144,6 +146,20 @@
   border-bottom: none;
 }
 
-#jasin-point .map-point-tooltip {
-  transform: translate(-80%, -61%);
+@media (max-width: 768px) {
+  .map-image,
+  .map-point {
+    display: none;
+  }
+  #available-cities li,
+  .map-point-tooltip {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .available-cities {
+    width: 100%;
+  }
 }
