@@ -22,7 +22,7 @@ function updateTooltip(events) {
         if (secondEventId && secondEventLink) {
           const secondEvent = events.find((e) => e.id === secondEventId);
           const secondEventName = secondEvent ? secondEvent.name : "Event 2";
-          tooltipText += `<br><br><strong style= "font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+          tooltipText += `<br><br><strong style="font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
         }
 
         cityPoint.classList.add("available");
@@ -82,12 +82,9 @@ function updateTooltip(events) {
         }
       }
     } else {
-      // Ensure map point and list item are disabled if there are no tickets
       if (cityPoint) {
         cityPoint.classList.remove("available");
-
         cityPoint.style.pointerEvents = "none";
-
         const tooltip = cityPoint.querySelector(".map-point-tooltip");
         if (tooltip) {
           tooltip.remove();
@@ -107,7 +104,6 @@ async function fetchEventData() {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
-
     const events = data.tickets;
     updateTooltip(events);
   } catch (error) {
@@ -148,18 +144,13 @@ function initBlumMap() {
     const eventId = point.getAttribute("data-event-id");
     const eventLink = point.getAttribute("data-link");
 
-    // Add only default behavior here, updateTooltip() will handle saleStatus logic
     const tooltip = document.createElement("div");
     tooltip.classList.add("map-point-tooltip");
-    tooltip.innerHTML = `<strong>Event Name</strong><br><a href="${eventLink}" target="_blank">Zapisz się</a>`;
+    tooltip.innerHTML = `<strong>Event Name</strong><br>Zarejestruj się`;
 
     point.appendChild(tooltip);
 
     point.addEventListener("mouseenter", () => {
-      tooltip.style.display = "block";
-    });
-
-    tooltip.addEventListener("mouseenter", () => {
       tooltip.style.display = "block";
     });
 
@@ -171,12 +162,24 @@ function initBlumMap() {
       }, 300);
     });
 
+    tooltip.addEventListener("mouseenter", () => {
+      tooltip.style.display = "block";
+    });
+
     tooltip.addEventListener("mouseleave", () => {
       setTimeout(() => {
         if (!tooltip.matches(":hover") && !point.matches(":hover")) {
           tooltip.style.display = "none";
         }
       }, 300);
+    });
+
+    tooltip.addEventListener("click", () => {
+      window.location.href = eventLink;
+    });
+
+    point.addEventListener("click", () => {
+      window.location.href = eventLink;
     });
   });
 
