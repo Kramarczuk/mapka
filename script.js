@@ -1,14 +1,17 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const tooltipToggle = document.getElementById("tooltip-toggle");
+const apiUrl =
+  "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
+
+if (document.readyState !== "loading") initBlumMap();
+else document.addEventListener("DOMContentLoaded", initBlumMap);
+
+function updateTooltip(events) {
   const availableCities = document.getElementById("available-cities");
-  const apiUrl =
-    "https://app.gridaly.com/api/v1/event/blum-w-trasie-2024/tickets";
+  availableCities.innerHTML = "";
 
-  function updateTooltip(events) {
-    availableCities.innerHTML = ""; // Clear the list
+  events.forEach((event) => {
+    const cityPoint = document.querySelector(`[data-event-id="${event.id}"]`);
 
-    events.forEach((event) => {
-      const cityPoint = document.querySelector(`[data-event-id="${event.id}"]`);
+    if (event.saleStatus === "onGoing") {
       if (cityPoint) {
         const linkUrl = cityPoint.getAttribute("data-link");
         const secondEventId = cityPoint.getAttribute("second-event-id");
@@ -19,52 +22,44 @@ document.addEventListener("DOMContentLoaded", function () {
         if (secondEventId && secondEventLink) {
           const secondEvent = events.find((e) => e.id === secondEventId);
           const secondEventName = secondEvent ? secondEvent.name : "Event 2";
-          tooltipText += `<br><br><strong style= "font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+          tooltipText += `<br><br><strong style="font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
         }
 
-        if (event.saleStatus === "onGoing") {
-          cityPoint.classList.add("available");
+        cityPoint.classList.add("available");
 
-          let tooltip = cityPoint.querySelector(".map-point-tooltip");
+        let tooltip = cityPoint.querySelector(".map-point-tooltip");
 
-          if (!tooltip) {
-            tooltip = document.createElement("div");
-            tooltip.classList.add("map-point-tooltip");
-            tooltip.innerHTML = tooltipText;
-            cityPoint.appendChild(tooltip);
+        if (!tooltip) {
+          tooltip = document.createElement("div");
+          tooltip.classList.add("map-point-tooltip");
+          tooltip.innerHTML = tooltipText;
+          cityPoint.appendChild(tooltip);
 
-            cityPoint.addEventListener("mouseenter", () => {
-              tooltip.style.display = "block";
-            });
+          cityPoint.addEventListener("mouseenter", () => {
+            tooltip.style.display = "block";
+          });
 
-            cityPoint.addEventListener("mouseleave", () => {
-              setTimeout(() => {
-                if (
-                  !tooltip.matches(":hover") &&
-                  !cityPoint.matches(":hover")
-                ) {
-                  tooltip.style.display = "none";
-                }
-              }, 300);
-            });
+          cityPoint.addEventListener("mouseleave", () => {
+            setTimeout(() => {
+              if (!tooltip.matches(":hover") && !cityPoint.matches(":hover")) {
+                tooltip.style.display = "none";
+              }
+            }, 300);
+          });
 
-            tooltip.addEventListener("mouseenter", () => {
-              tooltip.style.display = "block";
-            });
+          tooltip.addEventListener("mouseenter", () => {
+            tooltip.style.display = "block";
+          });
 
-            tooltip.addEventListener("mouseleave", () => {
-              setTimeout(() => {
-                if (
-                  !tooltip.matches(":hover") &&
-                  !cityPoint.matches(":hover")
-                ) {
-                  tooltip.style.display = "none";
-                }
-              }, 300);
-            });
-          } else {
-            tooltip.innerHTML = tooltipText;
-          }
+          tooltip.addEventListener("mouseleave", () => {
+            setTimeout(() => {
+              if (!tooltip.matches(":hover") && !cityPoint.matches(":hover")) {
+                tooltip.style.display = "none";
+              }
+            }, 300);
+          });
+        } else {
+          tooltip.innerHTML = tooltipText;
         }
 
         const li = document.createElement("li");
@@ -86,26 +81,39 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       }
-    });
-
-    if (events.length === 0) {
-      const li = document.createElement("li");
-      li.textContent = "Brak dostępnych wydarzeń";
-      availableCities.appendChild(li);
+    } else {
+      if (cityPoint) {
+        cityPoint.classList.remove("available");
+        cityPoint.style.pointerEvents = "none";
+        const tooltip = cityPoint.querySelector(".map-point-tooltip");
+        if (tooltip) {
+          tooltip.remove();
+        }
+      }
     }
-  }
+  });
 
-  async function fetchEventData() {
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      const events = data.tickets;
-      updateTooltip(events);
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych z API:", error);
-    }
+  if (events.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "Brak dostępnych wydarzeń";
+    availableCities.appendChild(li);
   }
+}
+
+async function fetchEventData() {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const events = data.tickets;
+    updateTooltip(events);
+  } catch (error) {
+    console.error("Błąd podczas pobierania danych z API:", error);
+  }
+}
+
+function initBlumMap() {
+  const tooltipToggle = document.getElementById("tooltip-toggle");
+  const availableCities = document.getElementById("available-cities");
 
   tooltipToggle.addEventListener("click", () => {
     if (
@@ -138,15 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const tooltip = document.createElement("div");
     tooltip.classList.add("map-point-tooltip");
-    tooltip.innerHTML = `<strong>Event Name</strong><br><a href="${eventLink}" target="_blank">Zapisz się</a>`;
+    tooltip.innerHTML = `<strong>Event Name</strong><br>Zarejestruj się`;
 
     point.appendChild(tooltip);
 
     point.addEventListener("mouseenter", () => {
-      tooltip.style.display = "block";
-    });
-
-    tooltip.addEventListener("mouseenter", () => {
       tooltip.style.display = "block";
     });
 
@@ -155,7 +159,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!tooltip.matches(":hover") && !point.matches(":hover")) {
           tooltip.style.display = "none";
         }
-      }, 300); 
+      }, 300);
+    });
+
+    tooltip.addEventListener("mouseenter", () => {
+      tooltip.style.display = "block";
     });
 
     tooltip.addEventListener("mouseleave", () => {
@@ -165,7 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }, 300);
     });
+
+    tooltip.addEventListener("click", () => {
+      window.location.href = eventLink;
+    });
+
+    point.addEventListener("click", () => {
+      window.location.href = eventLink;
+    });
   });
 
   fetchEventData();
-});
+}
