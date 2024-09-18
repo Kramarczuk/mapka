@@ -17,7 +17,10 @@ function updateTooltip(events) {
         const secondEventId = cityPoint.getAttribute("second-event-id");
         const secondEventLink = cityPoint.getAttribute("second-data-link");
 
-        let tooltipText = `${event.name}<br><a href="${linkUrl}">Zapisz się</a>`;
+        // Fetch short_description (address)
+        const address = event.short_description || "No address available";
+
+        let tooltipText = `${event.name}<br>${address}<br><a href="${linkUrl}">Zapisz się</a>`;
 
         if (secondEventId && secondEventLink) {
           const secondEvent = events.find((e) => e.id === secondEventId);
