@@ -200,10 +200,16 @@ function initBlumMap() {
     }
   });
 
-  document.addEventListener("click", function (event) {
+  const tooltipContainer = document.getElementById("tooltip-container");
+
+  tooltipContainer.addEventListener("click", function (event) {
+    const availableCities = document.getElementById("available-cities");
+    const tooltipToggle = document.getElementById("tooltip-toggle");
+
     const isClickInside =
       availableCities.contains(event.target) ||
       tooltipToggle.contains(event.target);
+
     if (!isClickInside) {
       availableCities.style.display = "none";
       tooltipToggle.innerHTML =
@@ -256,3 +262,5 @@ function initBlumMap() {
 
   fetchEventData();
 }
+
+zz;
