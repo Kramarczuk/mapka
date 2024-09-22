@@ -134,7 +134,6 @@ function updateTooltip(events) {
     jasinPoint.classList.add("available");
     jasinPoint.style.pointerEvents = "auto";
 
-    // Dodanie Jasin do centralnej listy
     if (firstEvent) {
       const li = document.createElement("li");
       li.innerHTML = `<a href="${jasinPoint.getAttribute("data-link")}">${
