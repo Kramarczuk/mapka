@@ -17,15 +17,14 @@ function updateTooltip(events) {
         const secondEventId = cityPoint.getAttribute("second-event-id");
         const secondEventLink = cityPoint.getAttribute("second-data-link");
 
-        // Fetch short_description (address)
         const address = event.short_description || "No address available";
-
         let tooltipText = `${event.name}<br>${address}<br><a href="${linkUrl}">Zapisz się</a>`;
 
         if (secondEventId && secondEventLink) {
           const secondEvent = events.find((e) => e.id === secondEventId);
-          const secondEventName = secondEvent ? secondEvent.name : "Event 2";
-          tooltipText += `<br><br><strong style="font-weight: normal";>${secondEventName}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+          if (secondEvent) {
+            tooltipText += `<br><br><strong style="font-weight: normal;">${secondEvent.name}</strong><br><a href="${secondEventLink}">Zapisz się</a>`;
+          }
         }
 
         cityPoint.classList.add("available");
@@ -84,19 +83,89 @@ function updateTooltip(events) {
           }
         }
       }
-    } else {
-      if (cityPoint) {
-        cityPoint.classList.remove("available");
-        cityPoint.style.pointerEvents = "none";
-        const tooltip = cityPoint.querySelector(".map-point-tooltip");
-        if (tooltip) {
-          tooltip.remove();
-        }
-      }
     }
   });
 
-  if (events.length === 0) {
+  const jasinPoint = document.getElementById("jasin-point");
+  const jasinEventId = jasinPoint.getAttribute("data-event-id");
+  const secondJasinEventId = jasinPoint.getAttribute("second-event-id");
+
+  const isJasinAvailable = events.some(
+    (event) =>
+      (event.id === jasinEventId || event.id === secondJasinEventId) &&
+      event.saleStatus === "onGoing"
+  );
+
+  if (isJasinAvailable) {
+    const firstEvent = events.find(
+      (e) => e.id === jasinEventId && e.saleStatus === "onGoing"
+    );
+    const secondEvent = events.find(
+      (e) => e.id === secondJasinEventId && e.saleStatus === "onGoing"
+    );
+
+    let tooltipText = "";
+
+    if (firstEvent) {
+      tooltipText = `${firstEvent.name}<br>${
+        firstEvent.short_description || "No address available"
+      }<br><a href="${jasinPoint.getAttribute("data-link")}">Zapisz się</a>`;
+    }
+
+    if (secondEvent) {
+      tooltipText += `<br><br><strong style="font-weight: normal;">${
+        secondEvent.name
+      }</strong><br><a href="${jasinPoint.getAttribute(
+        "second-data-link"
+      )}">Zapisz się</a>`;
+    }
+
+    let tooltip = jasinPoint.querySelector(".map-point-tooltip");
+
+    if (!tooltip) {
+      tooltip = document.createElement("div");
+      tooltip.classList.add("map-point-tooltip");
+      tooltip.innerHTML = tooltipText;
+      jasinPoint.appendChild(tooltip);
+    } else {
+      tooltip.innerHTML = tooltipText;
+    }
+
+    jasinPoint.classList.add("available");
+    jasinPoint.style.pointerEvents = "auto";
+
+    // Dodanie Jasin do centralnej listy
+    if (firstEvent) {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${jasinPoint.getAttribute("data-link")}">${
+        firstEvent.name
+      }</a>`;
+      li.addEventListener("click", () => {
+        window.location.href = jasinPoint.getAttribute("data-link");
+      });
+      availableCities.appendChild(li);
+    }
+
+    if (secondEvent) {
+      const secondLi = document.createElement("li");
+      secondLi.innerHTML = `<a href="${jasinPoint.getAttribute(
+        "second-data-link"
+      )}">${secondEvent.name}</a>`;
+      secondLi.addEventListener("click", () => {
+        window.location.href = jasinPoint.getAttribute("second-data-link");
+      });
+      availableCities.appendChild(secondLi);
+    }
+  } else {
+    jasinPoint.classList.remove("available");
+    jasinPoint.style.pointerEvents = "none";
+    const tooltip = jasinPoint.querySelector(".map-point-tooltip");
+    if (tooltip) {
+      tooltip.remove();
+    }
+  }
+
+  if (availableCities.children.length === 0) {
     const li = document.createElement("li");
     li.textContent = "Brak dostępnych wydarzeń";
     availableCities.appendChild(li);
