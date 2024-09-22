@@ -163,3 +163,8 @@
     width: 100%;
   }
 }
+
+#jasin-point .map-point-tooltip {
+  transform: translate(-80%, -61%);
+}
+
