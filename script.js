@@ -263,14 +263,9 @@ function initBlumMap() {
     tooltip.addEventListener("click", () => {
       window.location.href = eventLink;
     });
-
-    if (!availableCities) {
-      point.addEventListener("click", () => {
-        window.location.href = eventLink;
-      });
-    }
   });
 
   fetchEventData();
 }
 
+zz;
