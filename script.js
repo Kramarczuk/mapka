@@ -83,6 +83,15 @@ function updateTooltip(events) {
           }
         }
       }
+    } else {
+      // Jeśli event nie jest dostępny (saleStatus != "onGoing"), usuń tooltip
+      if (cityPoint) {
+        cityPoint.classList.remove("available");
+        const tooltip = cityPoint.querySelector(".map-point-tooltip");
+        if (tooltip) {
+          tooltip.remove(); // Usuwanie tooltipa
+        }
+      }
     }
   });
 
@@ -160,7 +169,7 @@ function updateTooltip(events) {
     jasinPoint.style.pointerEvents = "none";
     const tooltip = jasinPoint.querySelector(".map-point-tooltip");
     if (tooltip) {
-      tooltip.remove();
+      tooltip.remove(); // Usunięcie tooltipa, gdy wydarzenie nie jest dostępne
     }
   }
 
@@ -255,9 +264,11 @@ function initBlumMap() {
       window.location.href = eventLink;
     });
 
-    point.addEventListener("click", () => {
-      window.location.href = eventLink;
-    });
+    if (!availableCities) {
+      point.addEventListener("click", () => {
+        window.location.href = eventLink;
+      });
+    }
   });
 
   fetchEventData();
