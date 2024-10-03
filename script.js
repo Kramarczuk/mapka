@@ -274,4 +274,3 @@ function initBlumMap() {
   fetchEventData();
 }
 
-zz;
