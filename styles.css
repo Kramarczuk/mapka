@@ -18,7 +18,7 @@
   width: 22px;
   height: 22px;
   background-color: gray;
-  cursor: pointer;
+  cursor: not-allowed;
   transform: translate(-50%, -50%);
   z-index: 2;
 }
@@ -167,4 +167,3 @@
 #jasin-point .map-point-tooltip {
   transform: translate(-80%, -61%);
 }
-
